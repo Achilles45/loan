@@ -251,7 +251,6 @@ export default {
             }
         },
         makeRequest:function(){
-            hideLink();
             //Check if the user has filled in the details
             if(!this.city || !this.amount || !this.address || !this.payback){
                 this.err = 'Please fill in all details'
@@ -268,7 +267,6 @@ export default {
             }
         },
         showDashboard:function(){
-            hideLink();
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
             const withdrawal = document.querySelector('#withdrawal')
@@ -280,7 +278,6 @@ export default {
 
         },
         request:function(){
-            hideLink();
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
             const withdrawal = document.querySelector('#withdrawal')
@@ -291,7 +288,6 @@ export default {
             invest.style.display = 'none'
         },
         withdraw:function(){
-            hideLink();
             const withdrawal = document.querySelector('#withdrawal')
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
@@ -302,7 +298,6 @@ export default {
             invest.style.display = 'none'
         },
         invest:function(){
-            hideLink();
             const withdrawal = document.querySelector('#withdrawal')
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
