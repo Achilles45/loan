@@ -327,6 +327,9 @@
                             {{success}}
                         </div>
                                     <button type="submit" class="register__btn">Submit</button>
+                                      <div class="login__helper text-center pt-4">
+                                    <p>Have an account already?&nbsp;&nbsp; <router-link to="/login" class="register">Register Here</router-link></p>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -396,6 +399,8 @@ export default {
                        unpaid__loan: '00.00',
                        user__id: cred.user.uid
                    })
+                   let user = firebase.auth().currentUser
+                   
                })
                 .then(()=>{
                     this.$router.push({name: 'Dashboard'})
@@ -445,8 +450,8 @@ export default {
             }
         }
         small{
-            color: $tertiary-color;
-            font-weight: bold !important;
+            color: red;
+            // font-weight: bold !important;
             opacity: .8;
             .terms{
                 color: $secondary-color;

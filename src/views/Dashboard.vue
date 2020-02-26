@@ -1,12 +1,13 @@
 <template>
     <div class="dashboard">
         <div class="dashboard__wrapper">
-           <div class="dashboard__left">
-            <div class="heading text-center">
-                   <h4>Welcome Back</h4><br><br>
-               <small>If you ever need help, reach out to the customer team now</small>
+           <div class="dashboard__left" id="dashboard__left">
+            <div class="heading text-center pt-3">
+                       <h4>Welcome Back</h4><br>
+                        <small>{{ userEmail}}</small><br><br>
+                         <small>If you ever need help, reach out to the customer team now</small>
             </div>
-            <br /><br /><br>
+            <br /><br /><br><br>
             <ul>
                <li @click="showDashboard()" ><i class="fa fa-database icons"></i>&nbsp;&nbsp; Dashboard</li><hr> 
                <li @click="request()"><i class="fa fa-cogs icons"></i>&nbsp;&nbsp; Request Loan</li><hr>
@@ -15,40 +16,48 @@
                <li @click="logOut()"><i class="fa fa-database icons"></i>&nbsp;&nbsp; Logout</li><hr>
             </ul>
            </div>
-           <div class="dashboard__right">
-              <div class="heading">
-                  <h4>You are logged into your account</h4>
-                  <small>achilles@gmail.com</small>
+           <div class="dashboard__right ">
+              <div class="heading d-flex justify-content-between">
+                  <div class="content">
+                      <h4>You are logged as </h4>
+                      <h6>{{ fname }} {{ lname }}</h6>
+                  <!-- <small>{{ accountNumber }}</small> -->
+                  </div>
+                    <div @click.prevent="show()" class="navbar__toggler">
+                      <i class="fa fa-bars"></i>
+                  </div>
                   <hr>
               </div>
               <div id="dashboard">
+             <small>This is a summary of your activities on this platform</small>
+             <hr>
                   <div class="summary__wrapper">
                   <div class="summary__card one">
-                     <i class="fa fa-bars"></i>
+                     <i class="fa fa-home"></i>
                      <div class="content pl-4">
                          <h6>Account Balance</h6>
-                         <p>Your account balance is $00.00</p>
+                         <h5>${{userBalance}}</h5>
                      </div>
                   </div>
                     <div class="summary__card two">
-                     <i class="fa fa-bars"></i>
+                     <i class="fa fa-credit-card"></i>
                      <div class="content pl-4">
                          <h6>Your unpaid balance</h6>
-                         <p>The total loan you still owe us is $00.00</p>
+                         <h5>{{ unpaid }}</h5>
                      </div>
                   </div>
                     <div class="summary__card three">
-                     <i class="fa fa-bars"></i>
+                     <i class="fa fa-cubes"></i>
                      <div class="content pl-4">
-                         <h6>Lorem, ipsum dolor.</h6>
-                         <p>$00.00</p>
+                         <h6>Present loan amount</h6>
+                         <h5>{{ loanWallet }}</h5>
                      </div>
                   </div>
                    <div class="summary__card four">
-                     <i class="fa fa-bars"></i>
+                     <i class="fa fa-comments"></i>
                      <div class="content pl-4">
-                         <h6>Lorem, ipsum dolor.</h6>
-                         <p>$00.00</p>
+                         <h6>Need any support?</h6>
+                         <p>Please send a message in the contact section. Our customer support team will reach out to you in 24 hours.</p>
                      </div>
                   </div>
               </div>
@@ -66,6 +75,10 @@
                             </div>
                              <div v-if="success" class="alert alert-success">
                                 {{success}}
+                            </div>
+                            <div class="form-group">
+                                <label for="amount">Account ID</label>
+                                <input type="text" class="form-control" :value="accountNumber"  disabled>
                             </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -131,7 +144,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                    <label for="amount">When do you want to make this withdrawal effective</label>
-                                <input type="date" class="form-control" v-model="date">
+                                <input type="date" class="form-control" v-model="withdrawal__date">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -179,16 +192,34 @@ export default {
     name: 'Dashboard',
     data(){
         return{
+            //Data for the user
+            fname:null,
+            lname:null,
+            userEmail:null, 
+            userBalance:null,
+            loanWallet:null,
+            accountNumber:null,
+            unpaid:null,
+
+
+            id:null,
             city:null,
             amount:null, 
             address:null,
             payback:null,
             err:null,
             success:null,
-            date:null
+            withdrawal__date:null,
+            user:null,
+            balance:null,
         }
     },
     methods:{
+        //Show and hide left section of the dashboard
+        show:function(){
+            const navLeft = document.querySelector('#dashboard__left')
+            navLeft.classList.toggle('navLeft')
+        },
         logOut:function(){
            firebase.auth().signOut()
            .then(()=>{
@@ -211,6 +242,7 @@ export default {
             }else{
                 //Let the user name the request
                 db.collection('request').add({
+                    id:this.accountNumber,
                     city:this.city,
                     amount:this.amount,
                     address:this.address,
@@ -260,26 +292,24 @@ export default {
             withdrawal.style.display = 'none'
             invest.style.display = 'block'
         },
-        showPersonal:function(){
-            const personal = document.querySelector('.personal__contents');
-            const bank = document.querySelector('.bank__contents');
-            personal.style.display = 'block';
-            bank.style.display = 'none';
-        },
-        showBank:function(){
-            const personal = document.querySelector('.personal__contents');
-            const bank = document.querySelector('.bank__contents');
-            personal.style.display = 'none';
-            bank.style.display = 'block';
-        },
-        //Function to hide the profile section when mounted
-        hideBankDetails: function(){
-        const bank = document.querySelector('.bank__contents');
-           bank.style.display = 'none';
-        }
     },
     mounted(){
         this.showDashboard();
+        //Get current user that just logged in
+        let user = firebase.auth().currentUser
+
+        //Now check the database to fetch the details
+        db.collection('users').where("user__id", "==", user.uid).get().then(snapshot =>{
+            snapshot.forEach((doc) =>{
+                this.fname = doc.data().first__name
+                this.lname = doc.data().last__name
+                this.userEmail = doc.data().email
+                this.userBalance = doc.data().balance
+                this.loanWallet = doc.data().loan__collected
+                this.accountNumber = doc.data().user__id
+                this.unpaid = doc.data().unpaid__loan
+            })
+        })
     }
 }
 </script>
@@ -294,10 +324,11 @@ export default {
     // grid-gap: 30px;
     .dashboard__left{
         background: #251F68;
-        padding: 3rem;
+        padding: 3rem 2rem;
         color:#fff;
         small{
-            opacity: .8;
+            opacity: .7;
+            font-size: .8rem;
         }
         ul{
             li{
@@ -321,21 +352,27 @@ export default {
        }
         .summary__wrapper{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             grid-gap: 30px;
             margin-top: 2rem;
             .summary__card{
                 display: flex;
                 padding: 1.3rem 2rem;
                 border-radius: 4px;
-                font-size: .9rem;
+                // font-size: .9rem;
                 color:#fff !important;
                 margin-bottom: 2rem;
                 p{
                     color:#fff !important;
                     padding-top: .4rem;
                     opacity: .9;
+                    font-size: .7rem;
+                    line-height: 1.4rem;
 
+                }
+                h5{
+                    color:#fff;
+                    font-size: 1rem;
                 }
             }
             .one{
@@ -348,7 +385,7 @@ export default {
                     background: #0facf3;
                 }
                 .four{
-                    background: #FFCA28;
+                    background: #251F68;
                 }
         }
             //REQUEST FORM
@@ -408,6 +445,37 @@ export default {
             font-size: .9rem;
         }
     }
+}
+}
+.navbar__toggler{
+    display: none
+}
+
+.navLeft{
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    width: 70%;
+    z-index: 10000;
+    display: block !important;
+    transition: all ease-in-out .5s;
+    left: 0;
+}
+
+//MEDIA QUERIES FOR SMALLER SCREENS
+@media only screen and (max-width: 600px){
+    .dashboard__left{
+        display: none;
+    }
+.dashboard__right{
+    width: 100vw !important;
+    padding: 3rem 1.2rem !important;
+}
+.summary__wrapper{
+    grid-gap: 5px !important;
+}
+.navbar__toggler{
+    display: block !important;
 }
 }
 </style>

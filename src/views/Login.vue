@@ -25,7 +25,7 @@
                                 </div>
                                 <button type="submit" class="login__btn btn-block">Sign In</button>
                                 <div class="login__helper text-center pt-4">
-                                    <p>New to Virtual Banker?&nbsp;&nbsp; <router-link to="/register" class="register">Register Here</router-link></p>
+                                    <p>New to Networth International?&nbsp;&nbsp; <router-link to="/register" class="register">Register Here</router-link></p>
                                     <p>Forgot Password? <router-link to="/reset-password" class="password">Reset Password</router-link></p>
                                 </div>
                             </form>
@@ -100,9 +100,9 @@ export default {
             height: 2.9rem;
             border-radius: 0;
             box-shadow: none;
-            font-size: .9rem;
+            font-size: .8rem;
             &::placeholder{
-                font-size:.9rem;
+                font-size:.8rem;
             }
         }
         .login__btn{
