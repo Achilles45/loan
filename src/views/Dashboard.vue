@@ -144,7 +144,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                   <label for="amount">When do you want to make this withdrawal effective</label>
+                                   <label for="date">When do you want to make this withdrawal effective</label>
                                 <input type="date" class="form-control" v-model="withdrawal__date">
                             </div>
                         </div>
@@ -227,27 +227,41 @@ export default {
         logOut:function(){
            firebase.auth().signOut()
            .then(()=>{
-               this.$router.push({name: 'Login'})
+               this.$router.push({name: 'Index'})
            })
         },
         removeLoader:function(){
         setTimeout(() => {
             document.querySelector('.loader').remove()
             this.err = 'Request failed. Please contact customer support in the contact page'
-        }, 5000);
+        }, 9000);
+        },
+
+        //Function to delay errors
+        showError:function(){
+            setTimeout(() => {
+                this.err = 'Failed. Please completely fill out this form and try again'
+                this.loading = false
+            }, 5000);
+        },
+
+        //Error for Insuficient funds
+         //Function to delay errors
+        errorInsufficient:function(){
+            setTimeout(() => {
+                this.err = 'Insufficient funds. Please make a loan request first'
+                this.loading = false
+            }, 5000);
         },
         makeWithdrawal:function(){
-            //Check if the form was fiilled
+            this.loading = true
+            //Check if the user has filles out the form
             if(!this.withdrawal__date || !this.amount){
-                //Through error
-                this.err = 'Please fill out this form'
+               this.showError()
             }else if(this.loanWallet < this.amount){
-                    this.err = 'Insufficient fund. Please make a loan request first'
-                } 
-            else{
-                this.loading = 'true'
+               this.errorInsufficient()
+            }else{
                 this.removeLoader()
-             
             }
         },
         makeRequest:function(){

@@ -52,7 +52,8 @@ export default {
         return{
             password:null,
             email:null,
-            err:null
+            err:null,
+            user:null
         }
     },
     methods:{
@@ -62,13 +63,22 @@ export default {
                this.err = 'Please enter your credentials'
             }else{
                 this.err = null;
-             firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-            .then((cred)=>{
-                this.$router.push({name: 'Dashboard'})
-            })
-            .catch(err=>{
-                this.err = err.message
-            })
+                //Let's check first if the email has been verified
+                let user = firebase.auth().onAuthStateChanged(user=>{
+                    if(user){
+                        if(user.emailVerified == true){
+                               firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+                                .then((cred)=>{
+                                    this.$router.push({name: 'Dashboard'})
+                                })
+                                .catch(err=>{
+                                    this.err = err.message
+                                })
+                        }else{
+                            this.err = 'Login failed. Please verify your email address first'
+                        }
+                    }
+                })
             }
         }
     }

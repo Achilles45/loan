@@ -400,10 +400,16 @@ export default {
                        user__id: cred.user.uid
                    })
                    let user = firebase.auth().currentUser
-                   
+                    user.sendEmailVerification()
+                    .then(()=>{
+                        console.log('Email has been successfully sent')
+                    })
+                    .catch(err=>{
+                        console.log(err.message)
+                    })
                })
                 .then(()=>{
-                    this.$router.push({name: 'Dashboard'})
+                    this.$router.push({name: 'Login'})
                 })
                 .catch(err =>{
                     this.err = err.message;
