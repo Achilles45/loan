@@ -15,6 +15,7 @@
                <li @click="invest()" id="linkHandle"><i class="fa fa-cubes icons"></i>&nbsp;&nbsp; Invest</li><hr>
                <li @click="logOut()"><i class="fa fa-database icons"></i>&nbsp;&nbsp; Logout</li><hr>
             </ul>
+            <br><br><br><br>
            </div>
            <div class="dashboard__right ">
               <div class="heading d-flex justify-content-between">
@@ -183,7 +184,6 @@
                 </div>
             </div>
               <br>
-              <small>Networth International prides herself as your partner of choice that simplifies access to personal loan. We believe if you are empowered by significant financial support, you could go on to do so much <br> If you find anything unclear while using out platforms, kindly reach out to the support team through the contact page</small>
            </div>
         </div>
     </div>
@@ -332,7 +332,6 @@ export default {
 @import '../styles/_colors';
 .dashboard{
     width: 100vw;
-    height: 100vh;
     .dashboard__wrapper{
     display: grid;
     grid-template-columns:  300px 1fr;
@@ -341,6 +340,7 @@ export default {
         background: #251F68;
         padding: 3rem 2rem;
         color:#fff;
+        height: 100% !important;
         small{
             opacity: .7;
             font-size: .8rem;
@@ -467,19 +467,23 @@ export default {
 }
 
 .navLeft{
-    position: absolute;
-    top: 0;
-    height: 100vh;
-    width: 60%;
-    z-index: 10000;
     display: block !important;
     transition: all ease-in-out .5s;
-    left: 0;
+    width: 64%;
+    position: absolute;
+    z-index: 100;
+    bottom: 0 !important;
+    top: 0 !important;
 }
 
 //MEDIA QUERIES FOR SMALLER SCREENS
 @media only screen and (max-width: 600px){
+    .dashboard{
+        // grid-template-columns: 1fr;
+        position: relative;
+    }
     .dashboard__left{
+        background: $primary-color !important;
         display: none;
     }
 .dashboard__right{
