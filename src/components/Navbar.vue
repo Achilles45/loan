@@ -8,12 +8,12 @@
                     </div>
                     <div class="navbar__links">
                         <ul class="nav__links d-flex justify-content-between">
-                             <li><router-link to="/" class="nav__link home">Home</router-link></li>
+                             <li v-if="!user"><router-link to="/" class="nav__link home">Home</router-link></li>
                             <!-- <li v-if="!user"><router-link to="/about" class="nav__link about">About Us</router-link></li> -->
-                            <li><router-link to="/contact" class="nav__link contact">Contact Us</router-link></li>
-                            <li><router-link to="/register" class="nav__link register">Create a free account</router-link></li>
-                            <li><a>{{ user.email }}</a></li>
-                            <li><router-link to="/login" class="nav__link login">Login</router-link></li>
+                            <li v-if="!user"><router-link to="/contact" class="nav__link contact">Contact Us</router-link></li>
+                            <li v-if="!user"><router-link to="/register" class="nav__link register">Create a free account</router-link></li>
+                            <li v-if="user"><a>{{ user.email }}</a></li>
+                            <li v-if="!user"><router-link to="/login" class="nav__link login">Login</router-link></li>
                             <li v-if="user" @click="logOut()"><router-link to="" class="nav__link">Logout</router-link></li>
                         </ul>
                     </div>
