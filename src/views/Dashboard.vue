@@ -7,12 +7,12 @@
                         <small>{{ userEmail}}</small><br><br>
                          <small>If you ever need help, reach out to the customer team now</small>
             </div>
-            <br /><br /><br><br>
+            <br /><br /><br>
             <ul>
-               <li @click="showDashboard()" ><i class="fa fa-database icons"></i>&nbsp;&nbsp; Dashboard</li><hr> 
-               <li @click="request()"><i class="fa fa-cogs icons"></i>&nbsp;&nbsp; Request Loan</li><hr>
-               <li @click="withdraw()"><i class="fa fa-clone icons"></i>&nbsp;&nbsp; Make Withdrawal</li><hr>
-               <li @click="invest()"><i class="fa fa-cubes icons"></i>&nbsp;&nbsp; Invest</li><hr>
+               <li @click="showDashboard()" id="linkHandle" ><i class="fa fa-database icons"></i>&nbsp;&nbsp; Dashboard</li><hr> 
+               <li @click="request()" id="linkHandle"><i class="fa fa-cogs icons"></i>&nbsp;&nbsp; Request Loan</li><hr>
+               <li @click="withdraw()" id="linkHandle"><i class="fa fa-clone icons"></i>&nbsp;&nbsp; Make Withdrawal</li><hr>
+               <li @click="invest()" id="linkHandle"><i class="fa fa-cubes icons"></i>&nbsp;&nbsp; Invest</li><hr>
                <li @click="logOut()"><i class="fa fa-database icons"></i>&nbsp;&nbsp; Logout</li><hr>
             </ul>
            </div>
@@ -43,14 +43,14 @@
                      <i class="fa fa-credit-card"></i>
                      <div class="content pl-4">
                          <h6>Your unpaid balance</h6>
-                         <h5>{{ unpaid }}</h5>
+                         <h5>${{ unpaid }}</h5>
                      </div>
                   </div>
                     <div class="summary__card three">
                      <i class="fa fa-cubes"></i>
                      <div class="content pl-4">
                          <h6>Present loan amount</h6>
-                         <h5>{{ loanWallet }}</h5>
+                         <h5>${{ loanWallet }}</h5>
                      </div>
                   </div>
                    <div class="summary__card four">
@@ -163,6 +163,9 @@
                             </div>
                         </div>
                     </div><br>
+                    <div v-if="loading">
+                        <img src="../assets/loader.gif" class="loader" alt="">
+                    </div>
                     <button type="submit" class="request__btn">Make Withdrawal</button>
                 </form>
             </div>
@@ -212,6 +215,7 @@ export default {
             withdrawal__date:null,
             user:null,
             balance:null,
+            loading:null,
         }
     },
     methods:{
@@ -226,16 +230,28 @@ export default {
                this.$router.push({name: 'Login'})
            })
         },
+        removeLoader:function(){
+        setTimeout(() => {
+            document.querySelector('.loader').remove()
+            this.err = 'Request failed. Please contact customer support in the contact page'
+        }, 5000);
+        },
         makeWithdrawal:function(){
             //Check if the form was fiilled
-            if(!this.date || !this.amount){
+            if(!this.withdrawal__date || !this.amount){
                 //Through error
                 this.err = 'Please fill out this form'
-            }else{
-                this.success = 'Request submited. We will get back to you'
+            }else if(this.loanWallet < this.amount){
+                    this.err = 'Insufficient fund. Please make a loan request first'
+                } 
+            else{
+                this.loading = 'true'
+                this.removeLoader()
+             
             }
         },
         makeRequest:function(){
+            hideLink();
             //Check if the user has filled in the details
             if(!this.city || !this.amount || !this.address || !this.payback){
                 this.err = 'Please fill in all details'
@@ -252,6 +268,7 @@ export default {
             }
         },
         showDashboard:function(){
+            hideLink();
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
             const withdrawal = document.querySelector('#withdrawal')
@@ -263,6 +280,7 @@ export default {
 
         },
         request:function(){
+            hideLink();
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
             const withdrawal = document.querySelector('#withdrawal')
@@ -273,6 +291,7 @@ export default {
             invest.style.display = 'none'
         },
         withdraw:function(){
+            hideLink();
             const withdrawal = document.querySelector('#withdrawal')
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
@@ -283,6 +302,7 @@ export default {
             invest.style.display = 'none'
         },
         invest:function(){
+            hideLink();
             const withdrawal = document.querySelector('#withdrawal')
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
@@ -455,7 +475,7 @@ export default {
     position: absolute;
     top: 0;
     height: 100vh;
-    width: 70%;
+    width: 60%;
     z-index: 10000;
     display: block !important;
     transition: all ease-in-out .5s;
@@ -477,5 +497,9 @@ export default {
 .navbar__toggler{
     display: block !important;
 }
+}
+.loader{
+    max-width: 150px;
+    height: auto;
 }
 </style>
