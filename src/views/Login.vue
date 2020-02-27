@@ -60,7 +60,13 @@ export default {
         logIn:function(){
             //Check if the fields has been filled out
             if(!this.email || !this.password){
-               this.err = 'Please enter your credentials'
+              this.$swal({
+                title:'Login failed',
+                text: "All fields are important. Please try again!",
+                type: 'danger',
+                icon: 'error',
+                showCancelButton: false,
+                });
             }else{
                 this.err = null;
                 //Let's check first if the email has been verified

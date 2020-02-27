@@ -328,7 +328,7 @@
                         </div>
                                     <button type="submit" class="register__btn">Submit</button>
                                       <div class="login__helper text-center pt-4">
-                                    <p>Have an account already?&nbsp;&nbsp; <router-link to="/login" class="register">Register Here</router-link></p>
+                                    <p>Have an account already?&nbsp;&nbsp; <router-link to="/login" class="register">Login Here</router-link></p>
                                 </div>
                             </form>
                         </div>
@@ -382,8 +382,12 @@ export default {
         register(){
            //Check if the form fields were left empty
            if(!this.fname || !this.lname || !this.email || !this.phone || !this.country || !this.gender || !this.password || !this.repeatPassword){
-               this.err = 'Registration failed. Please fill in all the fields'
-               this.clearAlert()
+              this.$swal({
+                title:'Registration failed',
+                text: "All fields are important. Please try again!",
+                type: 'danger',
+                icon: 'error',
+                });
            }else{
                firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                .then(cred=>{
@@ -412,7 +416,12 @@ export default {
                     this.$router.push({name: 'Login'})
                 })
                 .catch(err =>{
-                    this.err = err.message;
+                    this.$swal({
+                    title:'Failed',
+                    text: "The process has failed. Please refresh and try again!",
+                    type: 'danger',
+                    icon: 'error',
+                });
                     console.log(err.message)
                 })
             }

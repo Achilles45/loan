@@ -135,12 +135,12 @@
                  <form @submit.prevent="makeWithdrawal()" action="">
                     <h4>Request for withdrawal</h4>
                     <small>Once your wallet has been credited with your loan request if approved, you can proceed to make withdrawals</small><hr><br>
-                    <div v-if="err" class="alert alert-danger">
+                    <!-- <div v-if="err" class="alert alert-danger">
                                 {{err}}
                             </div>
                              <div v-if="success" class="alert alert-success">
                                 {{success}}
-                            </div>
+                            </div> -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -231,6 +231,7 @@ export default {
            })
         },
         removeLoader:function(){
+            
         setTimeout(() => {
             document.querySelector('.loader').remove()
             this.err = 'Request failed. Please contact customer support in the contact page'
@@ -254,12 +255,22 @@ export default {
             }, 5000);
         },
         makeWithdrawal:function(){
-            this.loading = true
+            // this.loading = true
             //Check if the user has filles out the form
             if(!this.withdrawal__date || !this.amount){
-               this.showError()
+               this.$swal({
+                title:'Withdrawal failed',
+                text: "All fields are important. Please try again!",
+                type: 'danger',
+                icon: 'error',
+                });
             }else if(this.loanWallet < this.amount){
-               this.errorInsufficient()
+               this.$swal({
+                title:'Withdrawal failed',
+                text: "You do not have sufficient balance in your wallet to carry out this transaction",
+                type: 'danger',
+                icon: 'error',
+                });
             }else{
                 this.removeLoader()
             }
@@ -267,7 +278,12 @@ export default {
         makeRequest:function(){
             //Check if the user has filled in the details
             if(!this.city || !this.amount || !this.address || !this.payback){
-                this.err = 'Please fill in all details'
+                this.$swal({
+                title:'Request failed',
+                text: "All fields are important. Please try again!",
+                type: 'danger',
+                icon: 'error',
+                });
             }else{
                 //Let the user name the request
                 db.collection('request').add({
@@ -277,7 +293,12 @@ export default {
                     address:this.address,
                     payback:this.payback,
                 })
-                this.success = 'Request sucessfully sent'
+                this.$swal({
+                title:'Request successful',
+                text: "Your loan request has been successful submitted. We'll get back in less than 24 hours",
+                type: 'danger',
+                icon: 'success',
+                });
             }
         },
         showDashboard:function(){
