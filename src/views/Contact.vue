@@ -20,7 +20,7 @@
                            <h6><i class="fa fa-home contact-icon"></i>&nbsp;&nbsp; Head Office</h6>
                            <p>245 East Ohio Street Chicago, IL 60611</p>
                            <h6><i class="fa fa-envelope contact-icon"></i>&nbsp;&nbsp; Email Address</h6>
-                           <p>support@networthinternational.com</p>
+                           <p>networthinternational4@gmail.com</p>
                            <h6><i class="fa fa-phone contact-icon"></i>&nbsp;&nbsp; Phone</h6>
                            <p>+1 618-710-6254</p>
                        </div>

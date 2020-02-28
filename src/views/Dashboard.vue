@@ -164,9 +164,6 @@
                             </div>
                         </div>
                     </div><br>
-                    <div v-if="loading">
-                        <img src="../assets/loader.gif" class="loader" alt="">
-                    </div>
                     <button type="submit" class="request__btn">Make Withdrawal</button>
                 </form>
             </div>
@@ -182,6 +179,89 @@
                     <hr>
                     <p>With this feature, you will be able to make investment into different and verrified investment vehicles such as real estate, agriculture, hospitality among others. We will update you once this feature is ready.</p>
                 </div>
+            </div>
+            <!--End of Investment Section
+            ==================================-->
+            <div id="final-request">
+                <form @submit.prevent="finalWithdraw()" action="">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Name*</label>
+                                <input type="text" class="form-control" v-model="full__name" placeholder="Enter your full name">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Address*</label>
+                                <input type="text" class="form-control" v-model="final__address" placeholder="Enter your contact address">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Bank Name*</label>
+                                <input type="text" class="form-control" v-model="bank__name" placeholder="Enter your bank name">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Bank Address*</label>
+                                <input type="text" class="form-control" v-model="bank__address" placeholder="Enter your bank address">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Account Type*</label>
+                                <select name="" v-model="account__type" id="" class="form-control">
+                                    <option value="Current">Current Account</option>
+                                    <option value="Savings">Savings Account</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Account Number*</label>
+                                <input type="text" class="form-control" v-model="account__number" placeholder="Enter your account number">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Bank IBAN*</label>
+                              <input type="text" class="form-control" v-model="iban" placeholder="International Bank Account Number">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">BIC/SWIF*</label>
+                                <input type="text" class="form-control" v-model="swif" placeholder="Enter bank's BIC/SWIF code">
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Amount you want to transfer*</label>
+                              <input type="text" class="form-control" v-model="amount__transfer" placeholder="Enter amount here">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fullname">Reason for the transfer*</label>
+                                <input type="text" class="form-control" v-model="reason" placeholder="What's your reason for this transfer">
+                            </div>
+                        </div>
+                    </div>
+                     <div v-if="loading">
+                        <img src="../assets/loader.gif" class="loader" alt="">
+                    </div>
+                    <button type="submit" class="request__btn">Transfer Now</button>
+                </form>
             </div>
               <br>
            </div>
@@ -216,9 +296,25 @@ export default {
             user:null,
             balance:null,
             loading:null,
+
+
+            //Final winthdrawal Data
+            full__name:null,
+            final__address:null,
+            bank__name:null,
+            bank__address:null,
+            account__type:null,
+            account__number:null,
+            iban:null,
+            swif:null,
+            amount__transfer:null,
+            reason:null
         }
     },
     methods:{
+        //Method that will show the form where the user will fill in details while making finanl withdrawal
+
+
         //Show and hide left section of the dashboard
         show:function(){
             const navLeft = document.querySelector('#dashboard__left')
@@ -231,29 +327,23 @@ export default {
            })
         },
         removeLoader:function(){
-            
         setTimeout(() => {
             document.querySelector('.loader').remove()
-            this.err = 'Request failed. Please contact customer support in the contact page'
-        }, 9000);
+        }, 8000);
+        },
+        
+        showFinalAlert:function(){
+            setTimeout(() => {
+                this.$swal({
+                title:'Transfer failed',
+                text: "Transfer failed. You may need to verify your country code by contacting customer care",
+                type: 'danger',
+                icon: 'error',
+                });
+            }, 9000);
         },
 
-        //Function to delay errors
-        showError:function(){
-            setTimeout(() => {
-                this.err = 'Failed. Please completely fill out this form and try again'
-                this.loading = false
-            }, 5000);
-        },
-
-        //Error for Insuficient funds
-         //Function to delay errors
-        errorInsufficient:function(){
-            setTimeout(() => {
-                this.err = 'Insufficient funds. Please make a loan request first'
-                this.loading = false
-            }, 5000);
-        },
+        // //Function to delay errors
         makeWithdrawal:function(){
             // this.loading = true
             //Check if the user has filles out the form
@@ -264,15 +354,9 @@ export default {
                 type: 'danger',
                 icon: 'error',
                 });
-            }else if(this.loanWallet < this.amount){
-               this.$swal({
-                title:'Withdrawal failed',
-                text: "You do not have sufficient balance in your wallet to carry out this transaction",
-                type: 'danger',
-                icon: 'error',
-                });
             }else{
-                this.removeLoader()
+              //Show the place for the request form
+                this.showFinanlForm();
             }
         },
         makeRequest:function(){
@@ -306,10 +390,12 @@ export default {
             const request = document.querySelector('#request')
             const withdrawal = document.querySelector('#withdrawal')
             const invest = document.querySelector('#invest')
+            const finalRequest = document.querySelector('#final-request')
             dashboard.style.display = 'block',
             request.style.display = 'none'
             withdrawal.style.display = 'none'
             invest.style.display = 'none'
+            finalRequest.style.display = 'none'
 
         },
         request:function(){
@@ -317,31 +403,74 @@ export default {
             const request = document.querySelector('#request')
             const withdrawal = document.querySelector('#withdrawal')
             const invest = document.querySelector('#invest')
+            const finalRequest = document.querySelector('#final-request')
             dashboard.style.display = 'none',
             request.style.display = 'block'
             withdrawal.style.display = 'none'
             invest.style.display = 'none'
+            finalRequest.style.display = 'none'
         },
         withdraw:function(){
             const withdrawal = document.querySelector('#withdrawal')
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
             const invest = document.querySelector('#invest')
+            const finalRequest = document.querySelector('#final-request')
             dashboard.style.display = 'none',
             request.style.display = 'none'
             withdrawal.style.display = 'block'
             invest.style.display = 'none'
+            finalRequest.style.display = 'none'
         },
         invest:function(){
             const withdrawal = document.querySelector('#withdrawal')
             const dashboard = document.querySelector('#dashboard');
             const request = document.querySelector('#request')
             const invest = document.querySelector('#invest')
+            const finalRequest = document.querySelector('#final-request')
             dashboard.style.display = 'none',
             request.style.display = 'none'
             withdrawal.style.display = 'none'
             invest.style.display = 'block'
+            finalRequest.style.display = 'none'
         },
+
+        //Function for final withdraw
+        finalWithdraw:function(){
+          //Check if the user has filled in all details
+          if(!this.full__name || !this.final__address || !this.bank__name || !this.bank__address || !this.account__type || !this.account__number || !this.iban || !this.swif || !this.amount__transfer || !this.reason){
+              this.$swal({
+                title:'Withdrawal cannot be completed',
+                text: "All fields are important. Please try again!",
+                type: 'danger',
+                icon: 'error',
+                });
+          }else{
+              this.loading = true
+              this.removeLoader()
+              this.showFinalAlert()
+          }
+        },
+
+        //The function that will count from 0% to 39% and show transfer failed
+        // falied:function(from, to){
+        //     this.loader = true
+        // },
+
+        //Show Final Form
+        showFinanlForm:function(){
+            const withdrawal = document.querySelector('#withdrawal')
+            const dashboard = document.querySelector('#dashboard');
+            const request = document.querySelector('#request')
+            const invest = document.querySelector('#invest')
+            const finalRequest = document.querySelector('#final-request')
+            dashboard.style.display = 'none',
+            request.style.display = 'none'
+            withdrawal.style.display = 'none'
+            invest.style.display = 'none'
+            finalRequest.style.display = 'block'
+        }
+
     },
     mounted(){
         this.showDashboard();
