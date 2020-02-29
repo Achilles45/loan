@@ -335,8 +335,8 @@ export default {
         showFinalAlert:function(){
             setTimeout(() => {
                 this.$swal({
-                title:'Transfer failed',
-                text: "Transfer failed. You may need to verify your country code by contacting customer care",
+                title:'39% Completed',
+                text: "Your request has failed to proceed more than 39% because you do not have an access code. Kindly contact customer care for one",
                 type: 'danger',
                 icon: 'error',
                 });
@@ -434,6 +434,18 @@ export default {
             invest.style.display = 'block'
             finalRequest.style.display = 'none'
         },
+        
+        //Function for counting
+        firstCount(from, to){
+            let current = from;
+            let timerId = setInterval(() => {
+               let countNum = current
+                if(current == to){
+                    clearInterval(timerId)
+                }
+                current++;
+            }, 1000);
+        },
 
         //Function for final withdraw
         finalWithdraw:function(){
@@ -448,7 +460,8 @@ export default {
           }else{
               this.loading = true
               this.removeLoader()
-              this.showFinalAlert()
+                this.showFinalAlert()
+              this.firstCount(0, 10)
           }
         },
 
