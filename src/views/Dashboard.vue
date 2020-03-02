@@ -9,7 +9,7 @@
             </div>
             <br /><br /><br>
             <ul>
-               <li @click="showDashboard()" id="linkHandle" ><i class="fa fa-database icons"></i>&nbsp;&nbsp; Dashboard</li><hr> 
+               <li @click="showDashboard()"><i class="fa fa-database icons"></i>&nbsp;&nbsp; Dashboard</li><hr> 
                <li @click="request()" id="linkHandle"><i class="fa fa-cogs icons"></i>&nbsp;&nbsp; Request Loan</li><hr>
                <li @click="withdraw()" id="linkHandle"><i class="fa fa-clone icons"></i>&nbsp;&nbsp; Make Withdrawal</li><hr>
                <li @click="invest()" id="linkHandle"><i class="fa fa-cubes icons"></i>&nbsp;&nbsp; Invest</li><hr>
@@ -312,9 +312,6 @@ export default {
         }
     },
     methods:{
-        //Method that will show the form where the user will fill in details while making finanl withdrawal
-
-
         //Show and hide left section of the dashboard
         show:function(){
             const navLeft = document.querySelector('#dashboard__left')
@@ -329,7 +326,7 @@ export default {
         removeLoader:function(){
         setTimeout(() => {
             document.querySelector('.loader').remove()
-        }, 8000);
+        }, 9000);
         },
         
         showFinalAlert:function(){
@@ -396,7 +393,9 @@ export default {
             withdrawal.style.display = 'none'
             invest.style.display = 'none'
             finalRequest.style.display = 'none'
-
+          if(window.innerWidth < 1200){
+              this.show()
+          }
         },
         request:function(){
             const dashboard = document.querySelector('#dashboard');
@@ -409,6 +408,9 @@ export default {
             withdrawal.style.display = 'none'
             invest.style.display = 'none'
             finalRequest.style.display = 'none'
+            if(window.innerWidth < 1200){
+              this.show()
+          }
         },
         withdraw:function(){
             const withdrawal = document.querySelector('#withdrawal')
@@ -421,6 +423,9 @@ export default {
             withdrawal.style.display = 'block'
             invest.style.display = 'none'
             finalRequest.style.display = 'none'
+            if(window.innerWidth < 1200){
+              this.show()
+          }
         },
         invest:function(){
             const withdrawal = document.querySelector('#withdrawal')
@@ -433,6 +438,9 @@ export default {
             withdrawal.style.display = 'none'
             invest.style.display = 'block'
             finalRequest.style.display = 'none'
+            if(window.innerWidth < 1200){
+              this.show()
+          }
         },
         
         //Function for counting
@@ -487,6 +495,7 @@ export default {
     },
     mounted(){
         this.showDashboard();
+        this.show()
         //Get current user that just logged in
         let user = firebase.auth().currentUser
 
