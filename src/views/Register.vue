@@ -365,7 +365,9 @@ export default {
             repeatPassword:null,
             err: null,
             loader:false,
-            success:null
+            success:null,
+            first__code:null,
+            last__code:null
         }
     },
     methods:{
@@ -401,7 +403,9 @@ export default {
                        balance:'00.00',
                        loan__collected: '00.00',
                        unpaid__loan: '00.00',
-                       user__id: cred.user.uid
+                       user__id: cred.user.uid,
+                       first__code: '0000',
+                       last__code: '0000'
                    })
                    let user = firebase.auth().currentUser
                     user.sendEmailVerification()
